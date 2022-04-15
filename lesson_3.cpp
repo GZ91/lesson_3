@@ -167,7 +167,7 @@ int main(int argc, char** argv)
         {
             attempt_number++;
             cin >> word;
-            if (word == "exit") break;
+            if (word == "exit") exit(0);
             if (!isNumber(word)) {
                 cout << "Please enter the number: " << endl;
                 continue;
