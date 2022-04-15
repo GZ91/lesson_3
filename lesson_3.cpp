@@ -83,7 +83,10 @@ void print_table_winners()
     std::list<Winner*> list_winners;
     std::fstream file;
     file.open(PATH_FBASE, std::fstream::in);
-
+    if (!file.is_open()) {
+        cout << "table file not found" << endl;
+        exit(1);
+    }
     if (file)
     {
         string buf = "";
