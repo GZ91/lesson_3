@@ -9,7 +9,6 @@
 #define DIVIDER '*'
 #define PATH_FBASE "winner_table.txt"
 
-const int max_value = 100;
 
 using std::cout;
 using std::endl;
