@@ -5,19 +5,14 @@
 #include <string>
 #include <fstream>
 #include <list>
-
-#define DIVIDER '*'
-#define PATH_FBASE "winner_table.txt"
+#include <iomanip>
 
 
-using std::cout;
-using std::endl;
-using std::cin;
-using std::string;
+const char divider = '*';
+const std::string path_fbase = "winner_table.txt";
 
-Winner* parser_string(string);
 void filter_winners(std::list<Winner*>&);
-void win_record(int, string);
-Winner* parser_string(string);
+void win_record(int, std::string);
+Winner* parser_string(std::string);
 void print_table_winners();
-bool isNumber(string);
+bool isNumber(std::string);

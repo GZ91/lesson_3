@@ -2,41 +2,57 @@
 #include "lesson_3.h"
 
 
-void win_record(int attempt_number, string name)
+void win_record(int attempt_number, std::string name)
 {
-    std::list<Winner*> list_winners;
-    list_winners.push_back(new Winner(attempt_number, name));
-    std::fstream file_r;
-    file_r.open(PATH_FBASE, std::fstream::in);
-    string buf = "";
-    while (getline(file_r, buf))
+
+    std::fstream file;
+    file.open(path_fbase, std::fstream::in | std::fstream::out);// | std::fstream::app);
+
+    std::string buf = "";
+
+    Winner* rec_winer = new Winner(attempt_number, name);
+    Winner* winner_buf;
+
+    bool old_winner = false;
+    std::streampos position = file.tellg();
+    while (getline(file, buf))
     {
-        list_winners.push_back(parser_string(buf));
+        winner_buf = parser_string(buf);
+        if (winner_buf->name == rec_winer->name)
+        {
+            old_winner = true;
+            if (winner_buf->attempt_number > rec_winer->attempt_number)
+            {
+                file.seekp(position);
+                file << rec_winer->name << divider << std::setw(5) << rec_winer->attempt_number << std::endl;
+            }
+            delete winner_buf;
+            file.close();
+            break;
+        }
+        delete winner_buf;
+        position = file.tellg();
     }
-    filter_winners(list_winners);
-    file_r.close();
-
-
-    std::ofstream file;
-    file.open(PATH_FBASE, std::ofstream::out);
-    std::list <Winner*> ::iterator it;
-    for (it = list_winners.begin(); it != list_winners.end(); it++)
+    file.close();//
+    if (!old_winner)
     {
-        file << (*it)->name << DIVIDER << (*it)->attempt_number << endl;
-        delete (*it);
-    } 
-    file.close();
+        //file.seekp(position);
+        file.open(path_fbase, std::fstream::app);//
+        file << rec_winer->name << divider << std::setw(5) << rec_winer->attempt_number << std::endl;
+        file.close();
+    }
+    delete rec_winer;
 }
 
-Winner* parser_string(string line)
+Winner* parser_string(std::string line)
 {
     int size = line.size();
-    string name = "";
-    string att = "";
+    std::string name = "";
+    std::string att = "";
     bool rec_att = false;
     for (int i = 0; i < size; i++)
     {
-        if (line[i] == DIVIDER) {
+        if (line[i] == divider) {
             rec_att = true;
         }
         else if (!rec_att) {
@@ -56,7 +72,7 @@ void filter_winners(std::list<Winner*> &list_winners)
     list_winners.sort([](Winner* winner1, Winner* winner2) {return winner1->name < winner2->name;  });
     list_winners.sort([](Winner* winner1, Winner* winner2) {return winner1->attempt_number < winner2->attempt_number && winner1->name == winner2->name; });
     std::list <Winner*> ::iterator it;
-    string buf_name = "";
+    std::string buf_name = "";
 
     it = list_winners.begin();
     bool cont = true;
@@ -82,33 +98,33 @@ void print_table_winners()
 {
     std::list<Winner*> list_winners;
     std::fstream file;
-    file.open(PATH_FBASE, std::fstream::in);
+    file.open(path_fbase, std::fstream::in);
     if (!file.is_open()) {
-        cout << "table file not found" << endl;
+        std::cout << "table file not found" << std::endl;
         exit(1);
     }
     if (file)
     {
-        string buf = "";
+        std::string buf = "";
         while (getline(file, buf)) {
             list_winners.push_back(parser_string(buf));
         }
     }
     //filter_winners(list_winners);
-    cout << "------------------------" << endl 
-        << "High scores table:" << endl;
+    std::cout << "------------------------" << std::endl
+        << "High scores table:" << std::endl;
 
     std::list <Winner*> ::iterator it;
     for (it = list_winners.begin(); it != list_winners.end(); it++)
     {
-        cout << (*it)->name << ":" << (*it)->attempt_number << endl;
+        std::cout << (*it)->name << ":" << (*it)->attempt_number << std::endl;
         delete (*it);
     }
-    cout << "------------------------" << endl;
+    std::cout << "------------------------" << std::endl;
     file.close();
 }
 
-bool isNumber(string word) {
+bool isNumber(std::string word) {
 
     for (int i = 0; i < word.size(); i++)
     {
@@ -124,74 +140,74 @@ int main(int argc, char** argv)
 {
     int max_value = 100;
     if (argc > 1) {
-        if (string(argv[1]) == "-table")
+        if (std::string(argv[1]) == "-table")
         {
             print_table_winners();
             exit(0);
         }
-        else if (string(argv[1]) == "-max")
+        else if (std::string(argv[1]) == "-max")
         {
-            max_value = stoi(string(argv[2]));
+            max_value = stoi(std::string(argv[2]));
             for (int i = 2; i < argc; i++){
-                if (string(argv[i]) == "-level") exit(1);
+                if (std::string(argv[i]) == "-level") exit(1);
             }
         }
-        else if (string(argv[1]) == "-level")
+        else if (std::string(argv[1]) == "-level")
         {
-            if (stoi(string(argv[2])) == 1)
+            if (stoi(std::string(argv[2])) == 1)
             {
                 max_value = 10;
             }
-            else if (stoi(string(argv[2])) == 2)
+            else if (stoi(std::string(argv[2])) == 2)
             {
                 max_value = 50;
             }
-            else if (stoi(string(argv[2])) == 3)
+            else if (stoi(std::string(argv[2])) == 3)
             {
                 max_value = 100;
             }
             for (int i = 2; i < argc; i++) {
-                if (string(argv[i]) == "-max") exit(1);
+                if (std::string(argv[i]) == "-max") exit(1);
             }
         }
     }
-    cout << "Hi! Enter your name, please:" << endl;
-    string name = "";
-    cin >> name;
+    std::cout << "Hi! Enter your name, please:" << std::endl;
+    std::string name = "";
+    std::cin >> name;
     while (true)
     {
         std::srand(unsigned int(std::time(nullptr)));
         const int random_value = std::rand() % max_value;
-        cout << "Enter your guess: (To exit, write \"exit\")" << endl;
+        std::cout << "Enter your guess: (To exit, write \"exit\")" << std::endl;
         int attempt_number = 0;
-        string word = "";
+        std::string word = "";
         int number = 0;
         do
         {
             attempt_number++;
-            cin >> word;
+            std::cin >> word;
             if (word == "exit") exit(0);
             if (!isNumber(word)) {
-                cout << "Please enter the number: " << endl;
+                std::cout << "Please enter the number: " << std::endl;
                 continue;
             }
             number = stoi(word);
             if (number == random_value) {
-                cout << "you win! attempts = " << attempt_number << endl;
+                std::cout << "you win! attempts = " << attempt_number << std::endl;
                 win_record(attempt_number, name);
                 print_table_winners();
                 break;
             }
             else if (number > random_value) {
-                cout << "less than " << number << endl;
+                std::cout << "less than " << number << std::endl;
             }
             else if (number < random_value) {
-                cout << "greater than " << number << endl;
+                std::cout << "greater than " << number << std::endl;
             }
         } while (true);
-        cout << "Repeat (y/n):";
-        string word_ex = "";
-        cin >> word_ex;
+        std::cout << "Repeat (y/n):";
+        std::string word_ex = "";
+        std::cin >> word_ex;
         if (word_ex != "y") 
         {
             break;
