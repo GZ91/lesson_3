@@ -27,7 +27,6 @@ void win_record(int attempt_number, std::string name)
                 file << rec_winer->name << divider << std::setw(5) << rec_winer->attempt_number << std::endl;
             }
             delete winner_buf;
-            file.close();
             break;
         }
         delete winner_buf;
