@@ -66,33 +66,6 @@ Winner* parser_string(std::string line)
     return winner;
 }
 
-void filter_winners(std::list<Winner*> &list_winners)
-{
-    list_winners.sort([](Winner* winner1, Winner* winner2) {return winner1->name < winner2->name;  });
-    list_winners.sort([](Winner* winner1, Winner* winner2) {return winner1->attempt_number < winner2->attempt_number && winner1->name == winner2->name; });
-    std::list <Winner*> ::iterator it;
-    std::string buf_name = "";
-
-    it = list_winners.begin();
-    bool cont = true;
-    while (true)
-    {  
-        if (it == list_winners.end())
-        {
-            break;
-        }
-        if ((*it)->name != buf_name)
-        {
-            buf_name = (*it)->name;
-            it++;
-            continue;
-        }
-        delete (*it);
-        list_winners.erase(it++);
-    }
-    list_winners.sort([](Winner* winner1, Winner* winner2) {return winner1->attempt_number < winner2->attempt_number;  });
-}
-
 void print_table_winners()
 {
     std::list<Winner*> list_winners;
@@ -109,7 +82,6 @@ void print_table_winners()
             list_winners.push_back(parser_string(buf));
         }
     }
-    //filter_winners(list_winners);
     std::cout << "------------------------" << std::endl
         << "High scores table:" << std::endl;
 
