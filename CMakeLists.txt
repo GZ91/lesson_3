@@ -3,10 +3,14 @@ cmake_minimum_required(VERSION 3.5)
 project(01.lesson_3)
 
 add_executable(lesson_3 
-    lesson_3.cpp
+    util.cpp
+    main.cpp
     winner.cpp
+    game.cpp
     winner.h
-    lesson_3.h
+    main.h
+    util.h
+    game.h
 )
 
 set_target_properties(lesson_3 PROPERTIES
