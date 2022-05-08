@@ -78,5 +78,6 @@ Game* Game::get_instance()
     {
         game_instance = new Game();
     }
+
     return game_instance;
 }
