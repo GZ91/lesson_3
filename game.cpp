@@ -74,7 +74,7 @@ bool Game::user_continue()
 
 Game* Game::get_instance()
 {
-    if (!game_instance)
+    if (game_instance == nullptr)
     {
         game_instance = new Game();
     }
