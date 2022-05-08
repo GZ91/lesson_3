@@ -71,3 +71,12 @@ bool Game::user_continue()
     std::cin >> word_ex;
     return word_ex == "y";
 }
+
+Game* Game::get_instance()
+{
+    if (!game_instance)
+    {
+        game_instance = new Game();
+    }
+    return game_instance;
+}

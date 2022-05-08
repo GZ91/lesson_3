@@ -9,15 +9,7 @@
 class Game //implemented with a singleton
 {
 public:
-	static Game* get_instance()
-	{
-		if (!game_instance) 
-		{
-			game_instance = new Game();
-		}
-		return game_instance;
-	}
-
+	static Game* get_instance();
 	void welcome();
 	void init_random_value();
 	int get_max_value() { return max_value; };
